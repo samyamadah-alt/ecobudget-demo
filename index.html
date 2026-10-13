@@ -1,0 +1,1167 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#EEF2E9">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23122017'/%3E%3Cpath d='M9 21c0-7 5-11 14-11-1 9-5 13-11 13-1.3 0-2.3-.3-3-1Zm0 0 7-6' fill='none' stroke='%23B8EE6A' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>EcoBudget</title>
+<meta name="description" content="EcoBudget : le coach qui transforme tes gestes écologiques en économies. Prototype V0 avec démos pré-enregistrées.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout : page éditoriale claire couleur sauge (référence studio pilates), une bande sombre
+   "liquide" en WebGL (référence agence ZEN / bulles YukoHealth), l'app V0 posée comme un objet au centre. */
+:root{
+  --paper:#EEF2E9;      /* fond sauge très clair */
+  --sage:#DCE6D1;       /* sauge */
+  --sage-deep:#C3D4B4;  /* sauge soutenue */
+  --ink:#122017;        /* texte vert-noir */
+  --ink-soft:#4D5E51;   /* texte secondaire */
+  --forest:#0E1B13;     /* bande sombre */
+  --moss:#2E5A3A;       /* vert profond / accent texte */
+  --lime:#B8EE6A;       /* accent lumineux, utilisé avec parcimonie */
+  --card:#F8FAF5;       /* surfaces */
+  --line:rgba(18,32,23,.12);
+  --line-dark:rgba(220,236,210,.14);
+  --g-a:#2F8F4E; --g-b:#79AE3F; --g-c:#C9A72C; --g-d:#D9833A; --g-e:#C2513B;
+  --f-display:"Geist","Helvetica Neue",Arial,sans-serif;
+  --f-serif:"Instrument Serif","Times New Roman",Georgia,serif;
+  --f-mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --r-lg:28px; --r-md:18px; --r-sm:12px;
+  --gutter:clamp(16px,4vw,48px);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-display);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3{font-weight:600;letter-spacing:-.035em;line-height:1.02;text-wrap:balance;margin:0}
+p{margin:0}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:var(--gutter)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.serif{font-family:var(--f-serif);font-style:italic;font-weight:400;letter-spacing:-.01em}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--moss);outline-offset:3px;border-radius:6px}
+
+/* ---------- NAV ---------- */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.02em;text-decoration:none;font-size:18px}
+.brand svg{width:26px;height:26px}
+.nav-links{display:flex;gap:28px;font-size:14px;color:var(--ink-soft)}
+.nav-links a{text-decoration:none}
+.nav-links a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font:500 15px/1 var(--f-display);padding:13px 20px;border-radius:999px;text-decoration:none;transition:transform .2s ease,background .2s ease,color .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn-dark{background:var(--ink);color:var(--paper)}
+.btn-dark:hover{background:var(--moss)}
+.btn-lime{background:var(--lime);color:var(--forest)}
+.btn-ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.btn-sm{padding:10px 16px;font-size:14px}
+@media (max-width:820px){.nav-links{display:none}}
+
+/* ---------- HERO ---------- */
+.hero{padding-block:clamp(36px,6vw,72px) 0}
+.hero-grid{display:grid;grid-template-columns:1.02fr 1fr;gap:clamp(24px,4vw,56px);align-items:stretch}
+.hero h1{font-size:clamp(46px,7.2vw,104px);font-weight:600;letter-spacing:-.055em;line-height:.92;margin-top:18px}
+.hero h1 .serif{font-size:1.04em;letter-spacing:-.03em;color:var(--moss)}
+.hero-copy{display:flex;flex-direction:column;justify-content:space-between;gap:28px;min-width:0}
+.hero-lead{font-size:clamp(17px,1.5vw,19px);color:var(--ink-soft);max-width:52ch}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px}
+.pill-note{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--g-a);box-shadow:0 0 0 4px color-mix(in srgb,var(--g-a) 20%,transparent)}
+.liquid{position:relative;border-radius:var(--r-lg);overflow:hidden;min-height:520px;background:radial-gradient(120% 90% at 30% 20%,#3E7A4C,#0E1B13 70%);isolation:isolate}
+.liquid canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bubble{position:absolute;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.55),rgba(255,255,255,.08) 38%,rgba(185,238,106,.10) 62%,rgba(255,255,255,.18) 100%);box-shadow:inset -6px -10px 24px rgba(10,30,15,.35),inset 4px 6px 12px rgba(255,255,255,.25);backdrop-filter:blur(2px);animation:float 9s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-14px)}}
+.chip{position:absolute;display:flex;flex-direction:column;gap:2px;padding:12px 16px;border-radius:16px;background:rgba(248,250,245,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--ink);box-shadow:0 10px 30px rgba(8,20,12,.18);font-size:13px;min-width:0}
+.chip b{font-size:20px;letter-spacing:-.02em;font-weight:600}
+.chip small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.chip.c1{top:28px;left:24px}
+.chip.c2{top:44%;right:22px}
+.chip.c3{bottom:26px;left:24px;right:24px;flex-direction:row;align-items:center;justify-content:space-between;gap:12px}
+.chip.c3 .ok{display:inline-flex;align-items:center;gap:6px;background:var(--lime);color:var(--forest);padding:6px 10px;border-radius:999px;font-weight:600;font-size:12px;white-space:nowrap}
+.liquid-tag{position:absolute;top:26px;right:22px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(238,242,233,.8)}
+.stats{display:grid;grid-template-columns:1.3fr repeat(3,1fr);gap:0;margin-top:clamp(28px,4vw,48px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats>div{padding:22px 20px 22px 0;display:flex;flex-direction:column;gap:4px}
+.stats>div+div{padding-left:20px;border-left:1px solid var(--line)}
+.stats strong{font-size:clamp(20px,2.2vw,28px);font-weight:500;letter-spacing:-.03em}
+.stats span{font-size:12.5px;color:var(--ink-soft)}
+.stats .lead-s{font-size:clamp(18px,1.8vw,22px);letter-spacing:-.02em;line-height:1.2;font-weight:500}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr}.liquid{min-height:420px}.stats{grid-template-columns:1fr 1fr}.stats>div:nth-child(3){border-left:0;padding-left:0}.stats>div{border-top:1px solid var(--line)}.stats>div:nth-child(-n+2){border-top:0}}
+@media (max-width:480px){.chip.c2{top:auto;bottom:108px;right:24px}.liquid{min-height:460px}}
+
+/* ---------- SECTIONS ---------- */
+section{padding-block:clamp(64px,9vw,120px)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,4vw,64px);align-items:end;margin-bottom:clamp(28px,4vw,48px)}
+.sec-head h2{font-size:clamp(34px,4.6vw,64px)}
+.sec-head p{color:var(--ink-soft);max-width:52ch}
+@media (max-width:820px){.sec-head{grid-template-columns:1fr}}
+
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cmp{padding:clamp(22px,3vw,36px);border-radius:var(--r-lg);display:flex;flex-direction:column;gap:18px;min-width:0}
+.cmp.old{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.cmp.new{background:var(--sage)}
+.cmp h3{font-size:24px;letter-spacing:-.025em}
+.cmp ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.cmp li{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start}
+.cmp li svg{width:18px;height:18px;margin-top:3px}
+.cmp .quote{font-family:var(--f-serif);font-style:italic;font-size:clamp(22px,2.4vw,30px);line-height:1.15;letter-spacing:-.01em}
+.cmp.old .quote{color:var(--ink-soft)}
+@media (max-width:820px){.compare{grid-template-columns:1fr}}
+
+/* ---------- APP / DEMO ---------- */
+#demo{background:var(--sage);border-radius:clamp(24px,4vw,48px) clamp(24px,4vw,48px) 0 0}
+.personas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.persona{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:var(--r-md);background:var(--card);box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .2s,transform .2s;min-width:0}
+.persona:hover{transform:translateY(-2px)}
+.persona[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--ink)}
+.persona:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+.persona .top{display:flex;gap:10px;align-items:center}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:14px;color:var(--forest);flex:none}
+.persona strong{font-size:15px;letter-spacing:-.01em;display:block}
+.persona span{font-size:12.5px;color:var(--ink-soft);line-height:1.35}
+.persona .tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--moss)}
+@media (max-width:900px){.personas{grid-template-columns:1fr 1fr}}
+
+.demo-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.notice{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-soft);background:color-mix(in srgb,var(--card) 70%,transparent);padding:9px 14px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line)}
+.notice svg{flex:none;width:16px;height:16px}
+.autoplay{display:flex;align-items:center;gap:10px}
+.prog{display:none;align-items:center;gap:10px;font-family:var(--f-mono);font-size:12px;color:var(--ink)}
+.prog.on{display:inline-flex}
+.prog i{display:block;width:120px;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+.prog i b{display:block;height:100%;width:0;background:var(--moss);transition:width .3s linear}
+
+.app{background:var(--card);border-radius:var(--r-lg);box-shadow:0 30px 80px -30px rgba(18,32,23,.35),inset 0 0 0 1px var(--line);overflow:hidden}
+.app-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.app-id{display:flex;align-items:center;gap:10px;font-size:14px;min-width:0}
+.app-id .who{font-weight:600}
+.app-id .meta{color:var(--ink-soft);font-size:12.5px}
+.tabs{display:flex;gap:4px;background:var(--paper);padding:4px;border-radius:999px;overflow-x:auto;max-width:100%}
+.tab{all:unset;cursor:pointer;padding:8px 14px;border-radius:999px;font-size:13.5px;font-weight:500;color:var(--ink-soft);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tab .n{font-family:var(--f-mono);font-size:10.5px;opacity:.7}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.tab:focus-visible{outline:2px solid var(--moss)}
+.panel{padding:clamp(18px,2.6vw,32px)}
+.panel[hidden]{display:none}
+
+/* Habitudes */
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.group{border:0;margin:0;padding:18px;border-radius:var(--r-md);background:var(--paper);display:grid;gap:14px;align-content:start;min-width:0}
+.group .gh{display:flex;align-items:center;justify-content:space-between;font-weight:600;font-size:15px}
+.group .gh span{font-family:var(--f-mono);font-size:11px;font-weight:400;color:var(--ink-soft);letter-spacing:.04em}
+.field{display:grid;gap:6px}
+.field label,.field .lbl{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;color:var(--ink)}
+.field output{font-family:var(--f-mono);font-size:13px;font-variant-numeric:tabular-nums;color:var(--moss);white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(to right,var(--moss) var(--p,50%),var(--sage-deep) var(--p,50%))}
+input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:var(--sage-deep)}
+input[type=range]::-moz-range-progress{height:4px;border-radius:4px;background:var(--moss)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--card);border:2px solid var(--ink);margin-top:-8px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--card);border:2px solid var(--ink)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{all:unset;cursor:pointer;font-size:12.5px;padding:7px 11px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line);background:var(--card)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);box-shadow:none}
+.seg button:focus-visible{outline:2px solid var(--moss)}
+.live{position:sticky;bottom:0;margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-radius:var(--r-md);background:var(--forest);color:var(--paper)}
+.live .k{font-size:13px;color:rgba(238,242,233,.7)}
+.live strong{font-size:20px;font-weight:500;letter-spacing:-.02em}
+.live .vals{display:flex;gap:22px;flex-wrap:wrap}
+
+/* Bilan */
+.bilan-top{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:14px}
+.score{grid-row:span 2;background:var(--forest);color:var(--paper);border-radius:var(--r-md);padding:22px;display:flex;flex-direction:column;justify-content:space-between;gap:18px;position:relative;overflow:hidden;min-width:0}
+.score .grade-row{display:flex;align-items:flex-end;gap:18px}
+.grade{width:86px;height:86px;border-radius:22px;display:grid;place-items:center;font-size:54px;font-weight:600;color:var(--forest);flex:none}
+.score .t{font-size:clamp(34px,4vw,48px);font-weight:500;letter-spacing:-.04em;line-height:1}
+.score .t small{font-size:15px;letter-spacing:0;color:rgba(238,242,233,.7);margin-left:4px}
+.scale{display:flex;gap:4px}
+.scale span{flex:1;height:6px;border-radius:3px;opacity:.35}
+.scale span.on{opacity:1}
+.score p{font-size:12.5px;color:rgba(238,242,233,.72);line-height:1.45}
+.kpi{background:var(--paper);border-radius:var(--r-md);padding:18px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.kpi .k{font-size:12.5px;color:var(--ink-soft)}
+.kpi strong{font-size:clamp(26px,3vw,36px);font-weight:500;letter-spacing:-.035em;line-height:1.05}
+.kpi .sub{font-size:12.5px;color:var(--moss);font-family:var(--f-mono)}
+.kpi.accent{background:var(--lime)}
+.kpi.accent .sub{color:var(--forest)}
+@media (max-width:900px){.bilan-top{grid-template-columns:1fr 1fr}.score{grid-column:1/-1;grid-row:auto}}
+@media (max-width:440px){.bilan-top{grid-template-columns:1fr}td,th{padding-right:6px}table{font-size:12.5px}}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:14px;margin-top:14px}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+.box{background:var(--paper);border-radius:var(--r-md);padding:18px;min-width:0}
+.box h3{font-size:17px;letter-spacing:-.015em;margin-bottom:14px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.box h3 span{font-family:var(--f-mono);font-size:11px;color:var(--ink-soft);font-weight:400;letter-spacing:.04em}
+.cat{display:grid;gap:6px;margin-bottom:14px}
+.cat:last-child{margin-bottom:0}
+.cat .row{display:flex;justify-content:space-between;font-size:13.5px;gap:8px}
+.cat .row b{font-weight:600}
+.cat .row span{font-family:var(--f-mono);font-size:12.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{height:10px;border-radius:6px;background:var(--sage);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:6px;background:var(--moss);width:0;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.bar.eur i{background:var(--g-c)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--ink-soft);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-weight:500;color:var(--ink-soft);font-size:12px;padding:0 8px 8px 0;border-bottom:1px solid var(--line)}
+td{padding:10px 8px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.eff{display:inline-block;font-size:11px;padding:3px 8px;border-radius:999px;font-weight:500;white-space:nowrap}
+.eff.e1{background:color-mix(in srgb,var(--g-a) 16%,transparent);color:#21653A}
+.eff.e2{background:color-mix(in srgb,var(--g-c) 22%,transparent);color:#7A6512}
+.eff.e3{background:color-mix(in srgb,var(--g-e) 18%,transparent);color:#8E3727}
+.foot-note{font-size:12px;color:var(--ink-soft);margin-top:14px;line-height:1.5}
+
+/* Coach */
+.coach{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px}
+@media (max-width:900px){.coach{grid-template-columns:1fr}}
+.chat{background:var(--paper);border-radius:var(--r-md);padding:18px;display:flex;flex-direction:column;gap:12px;min-height:420px;max-height:620px;overflow-y:auto}
+.msg{max-width:92%;padding:12px 15px;border-radius:16px;font-size:14.5px;line-height:1.55;animation:pop .3s ease}
+@keyframes pop{from{transform:translateY(6px);opacity:.4}}
+.msg.ai{background:var(--card);box-shadow:inset 0 0 0 1px var(--line);border-top-left-radius:4px}
+.msg.me{background:var(--ink);color:var(--paper);align-self:flex-end;border-top-right-radius:4px}
+.msg ul{margin:8px 0 0;padding-left:18px}
+.msg li{margin-bottom:4px}
+.msg b{font-weight:600}
+.who-ai{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--moss);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.typing{display:inline-flex;gap:4px;padding:4px 0}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--ink-soft);animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{50%{opacity:.2}}
+.side{display:flex;flex-direction:column;gap:14px}
+.qs{display:grid;gap:8px}
+.q{all:unset;box-sizing:border-box;cursor:pointer;padding:12px 14px;border-radius:14px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line);font-size:14px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.q:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.q:focus-visible{outline:2px solid var(--moss)}
+.q[disabled]{opacity:.45;cursor:default}
+.disclaim{font-size:12.5px;color:var(--ink-soft);background:var(--paper);border-radius:14px;padding:14px;line-height:1.5}
+.disclaim b{color:var(--ink)}
+
+/* Objectif */
+.obj{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:14px}
+@media (max-width:900px){.obj{grid-template-columns:1fr}}
+.obj-ctrl{background:var(--forest);color:var(--paper);border-radius:var(--r-md);padding:22px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.obj-ctrl .seg button{background:transparent;color:var(--paper);box-shadow:inset 0 0 0 1px var(--line-dark)}
+.obj-ctrl .seg button[aria-pressed="true"]{background:var(--lime);color:var(--forest)}
+.obj-ctrl .target{font-size:clamp(40px,5vw,60px);font-weight:500;letter-spacing:-.045em;line-height:1}
+.obj-ctrl .target small{font-size:16px;color:rgba(238,242,233,.65);letter-spacing:0}
+.obj-ctrl input[type=range]::-webkit-slider-runnable-track{background:linear-gradient(to right,var(--lime) var(--p,50%),rgba(238,242,233,.18) var(--p,50%))}
+.obj-ctrl input[type=range]::-moz-range-track{background:rgba(238,242,233,.18)}
+.obj-ctrl input[type=range]::-moz-range-progress{background:var(--lime)}
+.obj-ctrl input[type=range]::-webkit-slider-thumb{background:var(--lime);border-color:var(--forest)}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;padding:8px 12px;border-radius:999px;align-self:flex-start}
+.status.ok{background:var(--lime);color:var(--forest)}
+.status.ko{background:rgba(217,131,58,.2);color:#F3B27A}
+.obj-ctrl p{font-size:13px;color:rgba(238,242,233,.75)}
+.plan{display:grid;gap:8px}
+.plan-item{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:var(--paper)}
+.plan-item .ix{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--f-mono);font-size:12px}
+.plan-item b{font-weight:600;font-size:14px;display:block}
+.plan-item span{font-size:12.5px;color:var(--ink-soft)}
+.plan-item .v{text-align:right;font-family:var(--f-mono);font-size:12.5px;white-space:nowrap}
+.plan-item .v b{font-family:var(--f-display);font-size:15px;color:var(--moss)}
+.totals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:6px}
+.totals>div{background:var(--sage);border-radius:14px;padding:14px;min-width:0}
+.totals .k{font-size:12px;color:var(--ink-soft)}
+.totals strong{display:block;font-size:22px;font-weight:500;letter-spacing:-.03em}
+@media (max-width:520px){.totals{grid-template-columns:1fr}}
+.ba{display:grid;gap:8px;margin-top:14px}
+.ba .row{display:grid;grid-template-columns:70px 1fr 90px;gap:10px;align-items:center;font-size:12.5px}
+.ba .row span:last-child{text-align:right;font-family:var(--f-mono)}
+.ba .bar{height:14px}
+
+/* Défis */
+.week{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.chal{display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:var(--r-md);background:var(--paper);box-shadow:inset 0 0 0 1px transparent;transition:background .25s,box-shadow .25s;min-width:0}
+.chal.done{background:var(--sage);box-shadow:inset 0 0 0 1px var(--moss)}
+.chal .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--card)}
+.chal .ic svg{width:22px;height:22px}
+.chal b{font-size:15px;letter-spacing:-.01em;line-height:1.3}
+.chal .gain{font-family:var(--f-mono);font-size:12px;color:var(--moss)}
+.chal button{all:unset;cursor:pointer;margin-top:auto;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:12px;background:var(--card);font-size:13.5px;font-weight:500;box-shadow:inset 0 0 0 1px var(--line)}
+.chal.done button{background:var(--ink);color:var(--paper);box-shadow:none}
+.chal button:focus-visible{outline:2px solid var(--moss)}
+.week-sum{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:14px;padding:18px;border-radius:var(--r-md);background:var(--forest);color:var(--paper)}
+.week-sum strong{font-size:24px;font-weight:500;letter-spacing:-.03em}
+.week-sum .k{font-size:12.5px;color:rgba(238,242,233,.7)}
+.week-sum .vals{display:flex;gap:28px;flex-wrap:wrap}
+.days{display:flex;gap:6px}
+.days span{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-family:var(--f-mono);font-size:11px;background:rgba(238,242,233,.08);color:rgba(238,242,233,.6)}
+.days span.on{background:var(--lime);color:var(--forest)}
+
+/* ---------- DARK BAND ---------- */
+.dark{position:relative;background:var(--forest);color:var(--paper);overflow:hidden;isolation:isolate}
+.dark canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55;z-index:-1}
+.dark::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--forest) 0%,rgba(14,27,19,.35) 40%,rgba(14,27,19,.6) 100%);z-index:-1}
+.dark .eyebrow{color:rgba(238,242,233,.6)}
+.dark .sec-head p{color:rgba(238,242,233,.72)}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;counter-reset:s}
+.step{padding:22px;border-radius:var(--r-md);background:rgba(238,242,233,.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px var(--line-dark);display:flex;flex-direction:column;gap:14px;min-width:0}
+.step .n{font-family:var(--f-mono);font-size:12px;color:var(--lime)}
+.step h3{font-size:21px;letter-spacing:-.02em;line-height:1.15}
+.step p{font-size:14px;color:rgba(238,242,233,.72)}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+.big-quote{margin-top:clamp(40px,6vw,80px);font-size:clamp(30px,4.4vw,60px);letter-spacing:-.04em;line-height:1.02;max-width:20ch}
+.big-quote .serif{color:var(--lime)}
+
+/* Différenciation */
+.vs{overflow-x:auto;border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--line)}
+.vs table{min-width:640px;font-size:14.5px}
+.vs th,.vs td{padding:16px 18px;border-bottom:1px solid var(--line)}
+.vs th{font-size:12px;font-family:var(--f-mono);letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+.vs td:first-child{color:var(--ink-soft);width:28%}
+.vs .us{background:var(--sage);font-weight:500}
+.vs tr:last-child td{border-bottom:0}
+
+/* Business */
+.biz{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.biz>div{padding:24px;border-radius:var(--r-lg);background:var(--card);box-shadow:inset 0 0 0 1px var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}
+.biz .who{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--moss)}
+.biz h3{font-size:22px;letter-spacing:-.025em;line-height:1.15}
+.biz p{font-size:14.5px;color:var(--ink-soft)}
+.biz .price{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:14px}
+.biz .price b{font-size:22px;font-weight:500;letter-spacing:-.03em}
+@media (max-width:900px){.biz{grid-template-columns:1fr}}
+
+/* Méthode */
+details.method{border-radius:var(--r-lg);background:var(--card);box-shadow:inset 0 0 0 1px var(--line);padding:0}
+details.method summary{cursor:pointer;list-style:none;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:600;font-size:18px;letter-spacing:-.02em}
+details.method summary::-webkit-details-marker{display:none}
+details.method summary span{font-family:var(--f-mono);font-size:12px;font-weight:400;color:var(--ink-soft)}
+details.method .in{padding:0 24px 24px}
+.method td:nth-child(3){font-family:var(--f-mono);font-size:12.5px;white-space:nowrap}
+.status-v{font-size:11px;padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--g-c) 22%,transparent);color:#7A6512;white-space:nowrap}
+.status-v.ok{background:color-mix(in srgb,var(--g-a) 16%,transparent);color:#21653A}
+
+footer{padding-block:48px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-soft)}
+footer .wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+footer p{max-width:60ch}
+@media (max-width:820px){footer .wrap{grid-template-columns:1fr}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="EcoBudget, accueil">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#122017"/><path d="M9 21c0-7 5-11 14-11-1 9-5 13-11 13-1.3 0-2.3-.3-3-1Zm0 0 7-6" fill="none" stroke="#B8EE6A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      EcoBudget
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#constat">Le concept</a>
+      <a href="#demo">Démo</a>
+      <a href="#fonctionnement">Fonctionnement</a>
+      <a href="#entreprises">Modèle</a>
+      <a href="#methode">Méthode</a>
+    </nav>
+    <a class="btn btn-dark btn-sm" href="#demo">Essayer la démo</a>
+  </div>
+</header>
+
+<main id="top">
+<!-- ============ HERO ============ -->
+<section class="hero" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div>
+          <span class="eyebrow">Coach éco-budget · prototype V0</span>
+          <h1>Moins d'impact.<br><span class="serif">Plus</span> de budget.</h1>
+        </div>
+        <p class="hero-lead">EcoBudget analyse tes habitudes du quotidien (chauffage, douches, machines, trajets, assiette, achats) et te montre les changements qui allègent à la fois ton empreinte carbone et tes dépenses. Chaque conseil est chiffré en euros et en kilos de CO₂e.</p>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="hero-cta">
+            <a class="btn btn-dark" href="#demo" data-autoplay="lea">Lancer la démo de Léa
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3l6 5-6 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a class="btn btn-ghost" href="#demo" data-persona="moi">Faire mon bilan</a>
+          </div>
+          <span class="pill-note"><span class="dot"></span>Démo sans compte, sans IA facturée : tout tourne dans ton navigateur.</span>
+        </div>
+      </div>
+      <div class="liquid" aria-label="Exemple de résultats pour le profil fictif de Léa">
+        <canvas id="gl-hero" aria-hidden="true"></canvas>
+        <span class="bubble" style="width:140px;height:140px;left:56%;top:12%"></span>
+        <span class="bubble" style="width:78px;height:78px;left:14%;top:46%;animation-delay:-3s"></span>
+        <span class="bubble" style="width:44px;height:44px;left:72%;top:64%;animation-delay:-6s"></span>
+        <div class="chip c1"><small>Achats · Léa</small><b class="num" id="hc1">−42 €/mois</b><span>en passant à la seconde main</span></div>
+        <div class="chip c2"><small>Assiette · Léa</small><b class="num" id="hc2">−351 kg</b><span>de CO₂e par an</span></div>
+        <div class="chip c3"><div><small>Objectif choisi</small><b class="num" id="hc3" style="display:block">100 €/mois</b></div><span class="ok"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Atteint en 5 gestes</span></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div><span class="lead-s">Un coach qui parle en euros autant qu'en CO₂e.</span></div>
+      <div><strong class="num">17</strong><span>questions sur ton quotidien</span></div>
+      <div><strong class="num">≈ 3 min</strong><span>pour ton premier bilan</span></div>
+      <div><strong class="num">0</strong><span>donnée envoyée à un serveur</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONSTAT ============ -->
+<section id="constat">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="eyebrow">Le constat</span><h2 style="margin-top:14px">On sait calculer son empreinte. On ne sait pas quoi en faire.</h2></div>
+      <p>Les calculateurs publics donnent un total en tonnes. Utile, mais difficile à transformer en décision. EcoBudget part de tes habitudes réelles et répond à une question plus motivante : quels gestes valent le coup, pour la planète et pour ton compte en banque ?</p>
+    </div>
+    <div class="compare">
+      <div class="cmp old">
+        <span class="eyebrow">Un calculateur classique</span>
+        <p class="quote">« Ton empreinte est de 9,2 tonnes de CO₂e. »</p>
+        <ul>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 5l8 8M13 5l-8 8" stroke="#8a978d" stroke-width="1.8" stroke-linecap="round"/></svg>Un chiffre abstrait, difficile à se représenter</li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 5l8 8M13 5l-8 8" stroke="#8a978d" stroke-width="1.8" stroke-linecap="round"/></svg>Des conseils qui ne parlent pas de ton budget</li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M5 5l8 8M13 5l-8 8" stroke="#8a978d" stroke-width="1.8" stroke-linecap="round"/></svg>Un bilan qu'on fait une fois, puis qu'on oublie</li>
+        </ul>
+      </div>
+      <div class="cmp new">
+        <span class="eyebrow" style="color:var(--moss)">EcoBudget</span>
+        <p class="quote" id="leaQuote">« 5 gestes pour économiser 100 €/mois et éviter 1,2 t de CO₂e par an. »</p>
+        <ul>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5l3.2 3.2L14 5.5" fill="none" stroke="#2E5A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Chaque geste chiffré en € par mois et en kg de CO₂e par an</li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5l3.2 3.2L14 5.5" fill="none" stroke="#2E5A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Un objectif au choix : économiser X €/mois ou réduire ton impact de Y %</li>
+          <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M4 9.5l3.2 3.2L14 5.5" fill="none" stroke="#2E5A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Des défis hebdomadaires pour suivre ses progrès</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DÉMO / APP ============ -->
+<section id="demo">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="eyebrow">Démo interactive</span><h2 style="margin-top:14px">Choisis un profil. <span class="serif">Ou le tien.</span></h2></div>
+      <p>Trois profils fictifs pré-enregistrés pour la démonstration, et un mode libre. Le bilan et les économies sont calculés en direct dans ton navigateur. Le coach de cette V0 répond avec des messages pré-écrits : aucune IA n'est appelée, aucun jeton n'est consommé.</p>
+    </div>
+
+    <div class="personas" role="group" aria-label="Profils de démonstration">
+      <button class="persona" data-persona="lea" aria-pressed="true">
+        <div class="top"><span class="av" style="background:#B8EE6A">LÉ</span><div><strong>Léa, 22 ans</strong><span>Alternante, studio en ville</span></div></div>
+        <span class="tag">Profil fictif · transports en commun</span>
+      </button>
+      <button class="persona" data-persona="martin" aria-pressed="false">
+        <div class="top"><span class="av" style="background:#C3D4B4">JM</span><div><strong>Julien, famille Martin</strong><span>4 personnes, maison au gaz</span></div></div>
+        <span class="tag">Profil fictif · périurbain</span>
+      </button>
+      <button class="persona" data-persona="karim" aria-pressed="false">
+        <div class="top"><span class="av" style="background:#E9D9A6">KA</span><div><strong>Karim, 34 ans</strong><span>Commercial terrain, beaucoup de route</span></div></div>
+        <span class="tag">Profil fictif · gros rouleur</span>
+      </button>
+      <button class="persona" data-persona="moi" aria-pressed="false">
+        <div class="top"><span class="av" style="background:#122017;color:#B8EE6A">+</span><div><strong>Mon profil</strong><span>Pars d'une base moyenne et ajuste</span></div></div>
+        <span class="tag">Mode libre</span>
+      </button>
+    </div>
+
+    <div class="demo-bar">
+      <span class="notice"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 7v4M8 4.6v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Mode démo : réponses du coach pré-enregistrées, zéro jeton consommé.</span>
+      <div class="autoplay">
+        <span class="prog" id="prog"><i><b id="progbar"></b></i><span id="progtxt">0:00</span></span>
+        <button class="btn btn-dark btn-sm" id="autoBtn" type="button">
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2l9 5-9 5z" fill="currentColor"/></svg><span>Démo auto · 60 s</span></button>
+      </div>
+    </div>
+
+    <div class="app" id="app">
+      <div class="app-top">
+        <div class="app-id"><span class="av" id="appAv" style="background:#B8EE6A;width:32px;height:32px;font-size:12px">LÉ</span><div><div class="who" id="appWho">Léa, 22 ans</div><div class="meta" id="appMeta">Profil fictif de démonstration</div></div></div>
+        <div class="tabs" role="tablist" aria-label="Étapes de l'application">
+          <button class="tab" role="tab" id="t-hab" aria-controls="p-hab" aria-selected="true"><span class="n">1</span>Habitudes</button>
+          <button class="tab" role="tab" id="t-bil" aria-controls="p-bil" aria-selected="false"><span class="n">2</span>Bilan</button>
+          <button class="tab" role="tab" id="t-coach" aria-controls="p-coach" aria-selected="false"><span class="n">3</span>Coach</button>
+          <button class="tab" role="tab" id="t-obj" aria-controls="p-obj" aria-selected="false"><span class="n">4</span>Objectif</button>
+          <button class="tab" role="tab" id="t-def" aria-controls="p-def" aria-selected="false"><span class="n">5</span>Défis</button>
+        </div>
+      </div>
+
+      <!-- 1. Habitudes -->
+      <div class="panel" role="tabpanel" id="p-hab" aria-labelledby="t-hab">
+        <div class="groups" id="groups"></div>
+        <div class="live">
+          <div class="vals">
+            <div><div class="k">Empreinte mesurée</div><strong class="num" id="liveT">–</strong></div>
+            <div><div class="k">Dépenses liées à ces habitudes</div><strong class="num" id="liveE">–</strong></div>
+          </div>
+          <button class="btn btn-lime btn-sm" type="button" data-go="bil">Voir mon bilan →</button>
+        </div>
+      </div>
+
+      <!-- 2. Bilan -->
+      <div class="panel" role="tabpanel" id="p-bil" aria-labelledby="t-bil" hidden>
+        <div class="bilan-top">
+          <div class="score">
+            <div class="eyebrow" style="color:rgba(238,242,233,.6)">Ton éco-bilan</div>
+            <div class="grade-row">
+              <div class="grade" id="grade">B</div>
+              <div><div class="t num" id="bigT">3,4<small>t CO₂e/an</small></div><div style="font-size:13px;color:rgba(238,242,233,.7);margin-top:6px" id="gradeTxt"></div></div>
+            </div>
+            <div class="scale" id="scale"></div>
+            <p>Périmètre mesuré : logement, eau chaude, linge, transports, alimentation et achats. L'empreinte complète moyenne d'un Français est d'environ 9 t, l'objectif 2050 est de 2 t.</p>
+          </div>
+          <div class="kpi"><span class="k">Ces habitudes te coûtent</span><strong class="num" id="kSpend">–</strong><span class="sub" id="kSpendY">–</span></div>
+          <div class="kpi accent"><span class="k">Économies possibles</span><strong class="num" id="kSave">–</strong><span class="sub" id="kSaveY">–</span></div>
+          <div class="kpi"><span class="k">CO₂e évitable</span><strong class="num" id="kKg">–</strong><span class="sub" id="kKgP">–</span></div>
+          <div class="kpi"><span class="k">Ton poste n°1</span><strong id="kTop">–</strong><span class="sub" id="kTopP">–</span></div>
+        </div>
+        <div class="two">
+          <div class="box">
+            <h3>Par poste <span>CO₂e / an · € / mois</span></h3>
+            <div id="cats"></div>
+            <div class="legend"><span><i style="background:var(--moss)"></i>Impact</span><span><i style="background:var(--g-c)"></i>Budget</span></div>
+          </div>
+          <div class="box">
+            <h3>Tes leviers, classés par économie <span id="levCount"></span></h3>
+            <div class="tbl"><table><thead><tr><th>Geste</th><th class="r">€/mois</th><th class="r">kg/an</th><th>Effort</th></tr></thead><tbody id="levers"></tbody></table></div>
+          </div>
+        </div>
+        <p class="foot-note">Estimations à partir d'ordres de grandeur publics (ADEME, impactco2.fr) et de prix moyens 2025-2026. Les économies supposent un comportement constant le reste du temps. Voir la section Méthode.</p>
+      </div>
+
+      <!-- 3. Coach -->
+      <div class="panel" role="tabpanel" id="p-coach" aria-labelledby="t-coach" hidden>
+        <div class="coach">
+          <div class="chat" id="chat" aria-live="polite"></div>
+          <div class="side">
+            <div class="box">
+              <h3>Pose une question <span>pré-enregistrée</span></h3>
+              <div class="qs" id="qs"></div>
+            </div>
+            <div class="disclaim"><b>Comment fonctionne le coach de la V0 ?</b><br>Les textes sont écrits à l'avance et complétés avec les chiffres calculés pour ton profil. En V1, ils pourront être générés par un modèle d'IA, avec les mêmes chiffres en entrée pour éviter les inventions.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Objectif -->
+      <div class="panel" role="tabpanel" id="p-obj" aria-labelledby="t-obj" hidden>
+        <div class="obj">
+          <div class="obj-ctrl">
+            <div class="eyebrow" style="color:rgba(238,242,233,.6)">Je me fixe un objectif</div>
+            <div class="seg" role="group" aria-label="Type d'objectif">
+              <button type="button" data-mode="eur" aria-pressed="true">Économiser des €</button>
+              <button type="button" data-mode="pct" aria-pressed="false">Réduire mon impact</button>
+            </div>
+            <div class="target num" id="tgtVal">100 <small>€/mois</small></div>
+            <div class="field">
+              <label for="tgt" class="sr">Valeur de l'objectif</label>
+              <input type="range" id="tgt" min="10" max="300" step="5" value="100">
+            </div>
+            <span class="status ok" id="tgtStatus">Objectif atteint</span>
+            <p id="tgtExplain">Le coach choisit d'abord les gestes qui rapportent le plus pour le moindre effort.</p>
+          </div>
+          <div class="box" style="background:var(--card);box-shadow:inset 0 0 0 1px var(--line)">
+            <h3>Ton plan <span id="planCount"></span></h3>
+            <div class="plan" id="plan"></div>
+            <div class="totals">
+              <div><span class="k">Par mois</span><strong class="num" id="pEur">–</strong></div>
+              <div><span class="k">Sur un an</span><strong class="num" id="pEurY">–</strong></div>
+              <div><span class="k">CO₂e évité / an</span><strong class="num" id="pKg">–</strong></div>
+            </div>
+            <div class="ba" id="ba"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Défis -->
+      <div class="panel" role="tabpanel" id="p-def" aria-labelledby="t-def" hidden>
+        <div class="week" id="week"></div>
+        <div class="week-sum">
+          <div class="vals">
+            <div><div class="k">Cette semaine</div><strong class="num" id="wEur">0 €</strong></div>
+            <div><div class="k">CO₂e évité</div><strong class="num" id="wKg">0 kg</strong></div>
+            <div><div class="k">Défis relevés</div><strong class="num" id="wN">0 / 4</strong></div>
+          </div>
+          <div class="days" aria-label="Série de la semaine" id="days"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FONCTIONNEMENT (bande sombre) ============ -->
+<section class="dark" id="fonctionnement">
+  <canvas id="gl-dark" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="eyebrow">Fonctionnement</span><h2 style="margin-top:14px">Du quotidien au plan d'action, en quatre étapes.</h2></div>
+      <p>Le calcul est déterministe et traçable : chaque chiffre vient d'un facteur documenté. L'IA intervient pour hiérarchiser, expliquer et motiver, jamais pour inventer un chiffre.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">01 · Questionnaire</span><h3>Tu décris tes habitudes</h3><p>17 questions concrètes : degrés du thermostat, minutes sous la douche, machines par semaine, kilomètres, repas avec viande, achats.</p></div>
+      <div class="step"><span class="n">02 · Calcul</span><h3>Le moteur chiffre tout</h3><p>Chaque habitude est convertie en kg de CO₂e par an et en € par mois, à partir de facteurs publics.</p></div>
+      <div class="step"><span class="n">03 · Coach</span><h3>L'IA classe tes leviers</h3><p>Elle repère ce qui pèse vraiment chez toi, explique pourquoi, et démonte les idées reçues.</p></div>
+      <div class="step"><span class="n">04 · Objectif</span><h3>Tu choisis ton cap</h3><p>« 100 € par mois » ou « −20 % d'impact » : le plan se construit, puis se suit en défis hebdomadaires.</p></div>
+    </div>
+    <p class="big-quote">Une IA qui transforme les gestes écologiques en <span class="serif">économies concrètes.</span></p>
+  </div>
+</section>
+
+<!-- ============ DIFFÉRENCIATION ============ -->
+<section id="difference">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="eyebrow">Positionnement</span><h2 style="margin-top:14px">Complémentaire des outils publics.</h2></div>
+      <p>Nos Gestes Climat (ADEME) mesure très bien l'empreinte complète. EcoBudget ne cherche pas à le remplacer : il se concentre sur les habitudes qu'on peut changer cette semaine et sur ce qu'elles rapportent.</p>
+    </div>
+    <div class="vs">
+      <table>
+        <thead><tr><th></th><th>Calculateur d'empreinte public</th><th class="us">EcoBudget</th></tr></thead>
+        <tbody>
+          <tr><td>Question posée</td><td>Combien j'émets au total ?</td><td class="us">Quoi changer en premier, et combien ça me rapporte ?</td></tr>
+          <tr><td>Unité affichée</td><td>Tonnes de CO₂e</td><td class="us">€ par mois et kg de CO₂e par an, côte à côte</td></tr>
+          <tr><td>Objectif</td><td>Viser 2 t en 2050</td><td class="us">Un objectif personnel : 100 €/mois, −20 % d'impact…</td></tr>
+          <tr><td>Suivi</td><td>Bilan ponctuel</td><td class="us">Défis hebdomadaires et progression</td></tr>
+          <tr><td>Ton</td><td>Pédagogique</td><td class="us">Coach personnel, centré sur ton intérêt</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODÈLE ÉCONOMIQUE ============ -->
+<section id="entreprises" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="eyebrow">Modèle économique · hypothèses</span><h2 style="margin-top:14px">Qui paie ?</h2></div>
+      <p>Le particulier est l'utilisateur, mais pas forcément le client. Trois pistes à tester avec de vrais interlocuteurs en V1.</p>
+    </div>
+    <div class="biz">
+      <div><span class="who">Particuliers</span><h3>Freemium</h3><p>Bilan et top 3 des gestes gratuits. Premium avec suivi mensuel, objectifs multiples et coach IA illimité.</p><div class="price"><b>2,99 €</b> / mois · hypothèse</div></div>
+      <div><span class="who">Banques & néobanques</span><h3>Marque blanche</h3><p>Intégré à l'appli bancaire : la banque connaît déjà les dépenses de transport et d'énergie. Argument fidélisation et reporting climat.</p><div class="price"><b>Licence</b> par client actif · hypothèse</div></div>
+      <div><span class="who">Employeurs & mutuelles</span><h3>Programme d'équipe</h3><p>Défis collectifs entre collègues, en lien avec le forfait mobilités durables et la démarche RSE de l'entreprise.</p><div class="price"><b>Abonnement</b> par salarié · hypothèse</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÉTHODE ============ -->
+<section id="methode" style="padding-top:0">
+  <div class="wrap">
+    <details class="method">
+      <summary>Méthode et facteurs utilisés <span>ouvrir · 14 hypothèses</span></summary>
+      <div class="in">
+        <p class="foot-note" style="margin:0 0 14px">La V0 utilise des ordres de grandeur. Chaque facteur est à confirmer avec sa source avant la V1 : c'est une étape du projet, pas un détail.</p>
+        <div class="tbl"><table>
+          <thead><tr><th>Poste</th><th>Hypothèse</th><th>Valeur</th><th>Statut</th></tr></thead>
+          <tbody id="factors"></tbody>
+        </table></div>
+      </div>
+    </details>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b style="color:var(--ink)">EcoBudget</b> · prototype V0 · projet vitrine IA de Clémence Chevrolat.<br>Profils et données fictifs. Contenus conçus avec l'aide d'outils d'IA générative (transparence AI Act).</p>
+    <p>Les chiffres sont des estimations pédagogiques et ne constituent pas un conseil financier. Aucune donnée n'est envoyée à un serveur : le calcul se fait dans le navigateur.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+/* ================== FACTEURS ================== */
+const F = {
+  heatNeed:100, heatDeg:0.07,
+  energy:{
+    elec:{label:"Électrique", kg:0.079, eur:0.25, cop:1},
+    gaz:{label:"Gaz", kg:0.227, eur:0.11, cop:1},
+    fioul:{label:"Fioul", kg:0.324, eur:0.12, cop:1},
+    pac:{label:"Pompe à chaleur", kg:0.079, eur:0.25, cop:3},
+    bois:{label:"Bois", kg:0.03, eur:0.07, cop:1}
+  },
+  elecKg:0.06, waterEur:0.0043,
+  showerL:12, showerKwh:0.4885,
+  washKwh:0.8, washL:50, washDet:0.15, washDetKg:0.1,
+  car:{thermique:{label:"Thermique",kg:0.22,eur:0.18}, hybride:{label:"Hybride",kg:0.16,eur:0.14}, electrique:{label:"Électrique",kg:0.10,eur:0.09}, aucune:{label:"Pas de voiture",kg:0,eur:0}},
+  tc:{kg:0.04, eur:0.06},
+  flightShort:{kg:450, eur:180}, flightLong:{kg:2000, eur:750},
+  meal:{red:{kg:7.26,eur:4.8}, white:{kg:1.58,eur:3.4}, veg:{kg:0.51,eur:2.4}},
+  cloth:{kg:12, eur:25, usedKg:1, usedEur:8},
+  parcel:{kg:0.5, eur:3},
+  device:{kg:120, eur:450, refurbKg:0.2, refurbEur:0.65}
+};
+
+const FACTORS = [
+  ["Chauffage","Besoin moyen à 19 °C","100 kWh/m²/an",0],
+  ["Chauffage","Économie par degré en moins","−7 %",1],
+  ["Chauffage","Électricité / gaz / fioul","0,079 / 0,227 / 0,324 kgCO₂e/kWh",0],
+  ["Énergie","Prix électricité / gaz","0,25 / 0,11 €/kWh",0],
+  ["Douche","Débit pommeau standard","12 L/min",0],
+  ["Linge","Énergie par cycle à 40 °C","0,8 kWh",0],
+  ["Voiture","Thermique, usage","0,22 kgCO₂e/km · 0,18 €/km",0],
+  ["Transports en commun","Moyenne bus / tram / train","0,04 kgCO₂e/km",0],
+  ["Avion","Aller-retour en Europe / long-courrier","450 / 2 000 kgCO₂e",0],
+  ["Repas","Bœuf / poulet / végétarien","7,26 / 1,58 / 0,51 kgCO₂e",1],
+  ["Vêtement","Pièce neuve, moyenne","12 kgCO₂e · 25 €",0],
+  ["Colis","Livraison et emballage","0,5 kgCO₂e",0],
+  ["Électronique","Appareil neuf, moyenne","120 kgCO₂e · 450 €",0],
+  ["Électronique","Reconditionné vs neuf","−80 % CO₂e · −35 % prix",0]
+];
+
+/* ================== PROFILS ================== */
+const PERSONAS = {
+  lea:{name:"Léa, 22 ans", meta:"Profil fictif · alternante, studio de 24 m²", av:"LÉ", avBg:"#B8EE6A",
+    v:{persons:1,surface:24,heat:"elec",temp:21,machines:2,showers:7,dur:10,carType:"aucune",carKm:0,tcKm:70,short:1,long:0,red:3,white:5,clothes:4,parcels:6,devices:1},
+    hello:"Bonjour Léa ! J'ai analysé tes 17 réponses.",
+    tip:"En alternance, ton employeur doit rembourser au moins 50 % de ton abonnement de transport en commun. Vérifie que c'est bien le cas sur ta fiche de paie : c'est de l'argent déjà acquis."},
+  martin:{name:"Julien, famille Martin", meta:"Profil fictif · 4 personnes, maison de 110 m² au gaz", av:"JM", avBg:"#C3D4B4",
+    v:{persons:4,surface:110,heat:"gaz",temp:21,machines:7,showers:7,dur:8,carType:"thermique",carKm:250,tcKm:0,short:1,long:0,red:4,white:6,clothes:2,parcels:4,devices:1},
+    hello:"Bonjour Julien ! J'ai analysé tes réponses pour ta part du foyer.",
+    tip:"À quatre, les gestes de logement se multiplient : baisser le thermostat d'un degré profite à toute la maison. Un thermostat programmable fait le travail à votre place la nuit et en journée."},
+  karim:{name:"Karim, 34 ans", meta:"Profil fictif · commercial terrain, 23 000 km/an", av:"KA", avBg:"#E9D9A6",
+    v:{persons:2,surface:62,heat:"elec",temp:22,machines:4,showers:7,dur:6,carType:"thermique",carKm:450,tcKm:10,short:2,long:1,red:6,white:5,clothes:3,parcels:8,devices:2},
+    hello:"Bonjour Karim ! J'ai analysé tes réponses.",
+    tip:"Si ta voiture est une voiture de fonction, une partie des économies de carburant revient à ton employeur. C'est un bon argument pour lui proposer l'éco-conduite ou un véhicule hybride au prochain renouvellement."},
+  moi:{name:"Mon profil", meta:"Mode libre · ajuste chaque curseur", av:"+", avBg:"#122017",
+    v:{persons:2,surface:60,heat:"elec",temp:20,machines:3,showers:7,dur:7,carType:"thermique",carKm:150,tcKm:20,short:1,long:0,red:3,white:5,clothes:2,parcels:4,devices:1},
+    hello:"J'ai analysé tes réponses.",
+    tip:"Ces chiffres sont des estimations : refais le bilan dans un mois pour mesurer tes progrès."}
+};
+
+/* ================== QUESTIONNAIRE ================== */
+const GROUPS = [
+  {t:"Logement", n:"4 questions", f:[
+    {k:"persons",l:"Personnes dans le foyer",min:1,max:6,step:1,u:v=>v+(v>1?" pers.":" pers.")},
+    {k:"surface",l:"Surface du logement",min:10,max:200,step:2,u:v=>v+" m²"},
+    {k:"heat",l:"Chauffage",seg:[["elec","Électrique"],["gaz","Gaz"],["fioul","Fioul"],["pac","Pompe à chaleur"],["bois","Bois"]]},
+    {k:"temp",l:"Température chez toi",min:17,max:24,step:.5,u:v=>fmt(v,1)+" °C"}]},
+  {t:"Eau chaude & linge", n:"3 questions", f:[
+    {k:"showers",l:"Douches par semaine",min:0,max:14,step:1,u:v=>v},
+    {k:"dur",l:"Durée d'une douche",min:2,max:20,step:1,u:v=>v+" min"},
+    {k:"machines",l:"Machines du foyer / semaine",min:0,max:14,step:1,u:v=>v}]},
+  {t:"Transports", n:"5 questions", f:[
+    {k:"carType",l:"Ta voiture",seg:[["thermique","Thermique"],["hybride","Hybride"],["electrique","Électrique"],["aucune","Aucune"]]},
+    {k:"carKm",l:"Voiture par semaine",min:0,max:800,step:10,u:v=>v+" km"},
+    {k:"tcKm",l:"Transports en commun / semaine",min:0,max:400,step:10,u:v=>v+" km"},
+    {k:"short",l:"Vols A/R en Europe par an",min:0,max:8,step:1,u:v=>v},
+    {k:"long",l:"Vols A/R long-courrier par an",min:0,max:4,step:1,u:v=>v}]},
+  {t:"Assiette", n:"2 questions", f:[
+    {k:"red",l:"Repas avec viande rouge / sem.",min:0,max:14,step:1,u:v=>v},
+    {k:"white",l:"Repas volaille ou poisson / sem.",min:0,max:14,step:1,u:v=>v}]},
+  {t:"Achats", n:"3 questions", f:[
+    {k:"clothes",l:"Vêtements neufs par mois",min:0,max:12,step:1,u:v=>v},
+    {k:"parcels",l:"Colis reçus par mois",min:0,max:25,step:1,u:v=>v},
+    {k:"devices",l:"Appareils électroniques neufs / an",min:0,max:5,step:1,u:v=>v}]}
+];
+
+/* ================== OUTILS ================== */
+const $ = s=>document.querySelector(s);
+const $$ = s=>Array.from(document.querySelectorAll(s));
+function fmt(n,d=0){return Number(n).toLocaleString("fr-FR",{minimumFractionDigits:d,maximumFractionDigits:d})}
+const eur = n=>fmt(Math.round(n))+" €";
+const kg = n=> n>=1000 ? fmt(n/1000,1)+" t" : fmt(Math.round(n))+" kg";
+const sleep = ms=>new Promise(r=>setTimeout(r,ms));
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ================== MOTEUR DE CALCUL ================== */
+function heatKwh(v,temp){ const need=v.surface*F.heatNeed*(1+F.heatDeg*(temp-19)); return need/F.energy[v.heat].cop; }
+function ecsFactor(v){ const e=v.heat==="gaz"||v.heat==="fioul"?F.energy[v.heat]:{kg:F.elecKg,eur:F.energy.elec.eur}; return e; }
+function showerCost(v,dur,flow){ // annuel
+  const mins=v.showers*dur*52, ratio=(flow||F.showerL)/F.showerL, e=ecsFactor(v);
+  const kwh=mins*F.showerKwh*ratio;
+  return {kg:kwh*e.kg, eur:kwh*e.eur + mins*(flow||F.showerL)*F.waterEur};
+}
+function washCost(v,cycles,kwh){ // annuel, part individuelle
+  const c=cycles*52/v.persons, k=kwh||F.washKwh;
+  return {kg:c*(k*F.elecKg+F.washDetKg), eur:c*(k*F.energy.elec.eur+F.washL*F.waterEur+F.washDet)};
+}
+function compute(v){
+  const en=F.energy[v.heat];
+  const hk=heatKwh(v,v.temp);
+  const heat={kg:hk*en.kg/v.persons, eur:hk*en.eur/v.persons};
+  const sh=showerCost(v,v.dur), wa=washCost(v,v.machines);
+  const car=F.car[v.carType]; const ckm=v.carType==="aucune"?0:v.carKm*52;
+  const carC={kg:ckm*car.kg, eur:ckm*car.eur};
+  const tc={kg:v.tcKm*52*F.tc.kg, eur:v.tcKm*52*F.tc.eur};
+  const fl={kg:v.short*F.flightShort.kg+v.long*F.flightLong.kg, eur:v.short*F.flightShort.eur+v.long*F.flightLong.eur};
+  const red=Math.min(v.red,14), white=Math.min(v.white,14-red), veg=Math.max(0,14-red-white);
+  const food={kg:52*(red*F.meal.red.kg+white*F.meal.white.kg+veg*F.meal.veg.kg), eur:52*(red*F.meal.red.eur+white*F.meal.white.eur+veg*F.meal.veg.eur)};
+  const cl={kg:v.clothes*12*F.cloth.kg, eur:v.clothes*12*F.cloth.eur};
+  const pa={kg:v.parcels*12*F.parcel.kg, eur:v.parcels*12*F.parcel.eur};
+  const dv={kg:v.devices*F.device.kg, eur:v.devices*F.device.eur};
+  const cats=[
+    {id:"log",label:"Logement",kg:heat.kg+sh.kg+wa.kg,eur:(heat.eur+sh.eur+wa.eur)/12},
+    {id:"tra",label:"Transports",kg:carC.kg+tc.kg+fl.kg,eur:(carC.eur+tc.eur+fl.eur)/12},
+    {id:"ali",label:"Assiette",kg:food.kg,eur:food.eur/12},
+    {id:"ach",label:"Achats",kg:cl.kg+pa.kg+dv.kg,eur:(cl.eur+pa.eur+dv.eur)/12}
+  ];
+  const total=cats.reduce((a,c)=>a+c.kg,0), spend=cats.reduce((a,c)=>a+c.eur,0);
+  return {cats,total,spend,actions:actions(v,{heat,sh,wa,carC,ckm,car,red,white})};
+}
+function actions(v,x){
+  const A=[]; const add=o=>{ if(o.kg>0.5||o.eur>0.2) A.push(o); };
+  const en=F.energy[v.heat];
+  if(v.temp>17.5){
+    const target=v.temp>19?19:v.temp-1;
+    const d=(heatKwh(v,v.temp)-heatKwh(v,target))/v.persons;
+    add({id:"heat",cat:"Logement",ic:"thermo",title:v.temp>19?`Chauffer à 19 °C au lieu de ${fmt(v.temp,1)} °C`:`Baisser d'1 °C, à ${fmt(target,1)} °C`,
+      eff:v.temp>19?1:2,kg:d*en.kg,eur:d*en.eur/12,chal:`Thermostat à ${fmt(target,1)} °C toute la semaine`});
+  }
+  if(v.dur>4&&v.showers>0){
+    const a=x.sh, b=showerCost(v,v.dur-2);
+    add({id:"shower",cat:"Logement",ic:"drop",title:`Douches de ${v.dur-2} min au lieu de ${v.dur}`,eff:1,kg:a.kg-b.kg,eur:(a.eur-b.eur)/12,chal:`Douches de ${v.dur-2} minutes chrono`});
+  }
+  if(v.showers>0){
+    const a=showerCost(v,Math.max(2,v.dur-(v.dur>4?2:0))), b=showerCost(v,Math.max(2,v.dur-(v.dur>4?2:0)),7);
+    add({id:"pommeau",cat:"Logement",ic:"drop",title:"Installer un pommeau économe (≈ 15 €)",eff:1,kg:a.kg-b.kg,eur:(a.eur-b.eur)/12,chal:"Installer le pommeau économe"});
+  }
+  if(v.machines>0){
+    const a=x.wa, b=washCost(v,v.machines*0.75,0.5);
+    add({id:"wash",cat:"Logement",ic:"wash",title:"Machines pleines et à 30 °C",eff:1,kg:a.kg-b.kg,eur:(a.eur-b.eur)/12,chal:"Uniquement des machines pleines, à 30 °C"});
+  }
+  if(x.ckm>0){
+    const moved=x.ckm*0.4;
+    add({id:"cartc",grp:"car",cat:"Transports",ic:"bus",title:"Laisser la voiture 2 jours sur 5 (transports, vélo)",eff:2,kg:moved*(x.car.kg-F.tc.kg),eur:moved*(x.car.eur-F.tc.eur)/12,chal:"2 trajets sans voiture"});
+    add({id:"covoit",grp:"car",cat:"Transports",ic:"car",title:"Covoiturer la moitié de tes trajets",eff:2,kg:x.ckm*0.5*x.car.kg*0.5,eur:x.ckm*0.5*x.car.eur*0.5/12,chal:"2 trajets en covoiturage"});
+    if(v.carType!=="electrique") add({id:"eco",cat:"Transports",ic:"car",title:"Éco-conduite (−10 % de carburant)",eff:1,kg:x.carC.kg*0.1,eur:x.carC.eur*0.1/12,chal:"Conduite souple, 110 au lieu de 130"});
+  }
+  if(v.short>0) add({id:"train",cat:"Transports",ic:"train",title:"Remplacer un vol européen par le train",eff:2,kg:F.flightShort.kg-40,eur:0,chal:"Comparer le train pour ton prochain voyage"});
+  if(v.long>0) add({id:"long",cat:"Transports",ic:"plane",title:"Un long-courrier tous les 2 ans au lieu de chaque année",eff:3,kg:F.flightLong.kg/2,eur:F.flightLong.eur/2/12,chal:"Planifier un voyage proche cette année"});
+  if(x.red>=2){
+    const n=Math.floor(x.red/2);
+    add({id:"red",cat:"Assiette",ic:"leaf",title:`Diviser la viande rouge par deux (${x.red} → ${x.red-n} repas/sem.)`,eff:2,kg:n*52*(F.meal.red.kg-F.meal.veg.kg),eur:n*52*(F.meal.red.eur-F.meal.veg.eur)/12,chal:`${n} repas végétarien${n>1?"s":""} à la place du bœuf`});
+  }
+  if(x.white>=2) add({id:"veg",cat:"Assiette",ic:"leaf",title:"2 repas végétariens de plus par semaine",eff:1,kg:2*52*(F.meal.white.kg-F.meal.veg.kg),eur:2*52*(F.meal.white.eur-F.meal.veg.eur)/12,chal:"2 repas végétariens de plus"});
+  if(v.clothes>=2){
+    const less=v.clothes/2, used=v.clothes/4;
+    add({id:"cloth",cat:"Achats",ic:"shirt",title:"Moitié moins de neuf, un quart en seconde main",eff:2,kg:less*12*F.cloth.kg-used*12*F.cloth.usedKg,eur:less*F.cloth.eur-used*F.cloth.usedEur,chal:"Aucun vêtement neuf cette semaine"});
+  }
+  if(v.devices>=1) add({id:"refurb",cat:"Achats",ic:"phone",title:"Choisir le reconditionné pour l'électronique",eff:1,kg:v.devices*F.device.kg*(1-F.device.refurbKg),eur:v.devices*F.device.eur*(1-F.device.refurbEur)/12,chal:"Comparer neuf et reconditionné avant d'acheter"});
+  if(v.parcels>=4) add({id:"parcel",cat:"Achats",ic:"box",title:"Regrouper tes commandes en ligne",eff:1,kg:v.parcels/2*12*F.parcel.kg,eur:v.parcels/2*F.parcel.eur,chal:"Une seule commande groupée, en point relais"});
+  return A;
+}
+/* Sélection compatible (une seule action par groupe) */
+function compatible(list){ const seen=new Set(), out=[]; for(const a of list){ if(a.grp){ if(seen.has(a.grp)) continue; seen.add(a.grp);} out.push(a);} return out; }
+function potential(res){ return compatible([...res.actions].sort((a,b)=>b.eur-a.eur)); }
+function planFor(res,mode,target){
+  const score = mode==="eur" ? a=>(a.eur/a.eff)+a.kg/5000 : a=>(a.kg/a.eff)+a.eur/50;
+  const sorted=[...res.actions].sort((a,b)=>score(b)-score(a));
+  const chosen=[], seen=new Set(); let got=0;
+  const goal = mode==="eur" ? target : res.total*target/100;
+  for(const a of sorted){
+    if(got>=goal) break;
+    if(a.grp&&seen.has(a.grp)) continue;
+    if(mode==="eur"&&a.eur<0.5) continue;
+    if(a.grp) seen.add(a.grp);
+    chosen.push(a); got+= mode==="eur"?a.eur:a.kg;
+  }
+  return {chosen, reached:got>=goal, got, goal};
+}
+function grade(t){ if(t<2.5) return ["A","var(--g-a)","Très sobre"]; if(t<4) return ["B","var(--g-b)","Sobre"]; if(t<5.5) return ["C","var(--g-c)","Dans la moyenne"]; if(t<7.5) return ["D","var(--g-d)","Élevé"]; return ["E","var(--g-e)","Très élevé"]; }
+
+/* ================== ÉTAT ================== */
+let state={pid:"lea", v:{...PERSONAS.lea.v}, mode:"eur", target:100, done:{}};
+let res=compute(state.v);
+let coachRun=0;
+
+/* ================== RENDU : QUESTIONNAIRE ================== */
+function buildForm(){
+  const host=$("#groups"); host.innerHTML="";
+  GROUPS.forEach(g=>{
+    const fs=document.createElement("fieldset"); fs.className="group";
+    fs.setAttribute("aria-label",g.t); fs.innerHTML=`<div class="gh">${g.t}<span>${g.n}</span></div>`;
+    g.f.forEach(f=>{
+      const d=document.createElement("div"); d.className="field";
+      if(f.seg){
+        d.innerHTML=`<span class="lbl">${f.l}</span><div class="seg" role="group" aria-label="${f.l}">${f.seg.map(([val,lab])=>`<button type="button" data-k="${f.k}" data-v="${val}" aria-pressed="false">${lab}</button>`).join("")}</div>`;
+      } else {
+        d.innerHTML=`<label for="f-${f.k}"><span>${f.l}</span><output id="o-${f.k}" for="f-${f.k}"></output></label><input type="range" id="f-${f.k}" data-k="${f.k}" min="${f.min}" max="${f.max}" step="${f.step}">`;
+      }
+      fs.appendChild(d);
+    });
+    host.appendChild(fs);
+  });
+  host.addEventListener("input",e=>{ const k=e.target.dataset.k; if(!k) return; state.v[k]=Number(e.target.value); if(state.pid!=="moi") markCustom(); syncForm(); refresh(); });
+  host.addEventListener("click",e=>{ const b=e.target.closest(".seg button[data-k]"); if(!b) return; state.v[b.dataset.k]=b.dataset.v; if(b.dataset.k==="carType"&&b.dataset.v==="aucune") state.v.carKm=0; if(state.pid!=="moi") markCustom(); syncForm(); refresh(); });
+}
+function markCustom(){ $("#appMeta").textContent=PERSONAS[state.pid].meta+" · modifié"; }
+function fieldDef(k){ for(const g of GROUPS) for(const f of g.f) if(f.k===k) return f; }
+function syncForm(){
+  for(const g of GROUPS) for(const f of g.f){
+    if(f.seg){ $$(`.seg button[data-k="${f.k}"]`).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===state.v[f.k]))); }
+    else { const el=$("#f-"+f.k); el.value=state.v[f.k]; $("#o-"+f.k).textContent=f.u(state.v[f.k]); el.style.setProperty("--p",((state.v[f.k]-f.min)/(f.max-f.min)*100)+"%"); if(f.k==="carKm") el.disabled=state.v.carType==="aucune"; }
+  }
+}
+
+/* ================== RENDU : BILAN ================== */
+const ICONS={
+  thermo:'<path d="M10 4a2 2 0 0 1 4 0v9.3a4 4 0 1 1-4 0Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 10v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  drop:'<path d="M12 3s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11Z" fill="none" stroke="currentColor" stroke-width="1.6"/>',
+  wash:'<rect x="4" y="3" width="16" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="13" r="4.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.5 6.5h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  bus:'<rect x="5" y="3" width="14" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 11h14M8 21v-3M16 21v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  car:'<path d="M4 15l1.6-5A2 2 0 0 1 7.5 8.6h9a2 2 0 0 1 1.9 1.4L20 15v3H4Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="16" cy="15" r="1" fill="currentColor"/>',
+  train:'<rect x="6" y="3" width="12" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 11h12M9 21l1.5-4M15 21l-1.5-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  plane:'<path d="M3 13l18-7-4 14-5-5-4 4v-5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',
+  leaf:'<path d="M5 19c0-8 6-13 15-13-1 10-6 14-12 14-1.2 0-2.2-.3-3-1Zm0 0 7-7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+  shirt:'<path d="M8 3l-5 3 2 4 3-1v12h8V9l3 1 2-4-5-3a4 4 0 0 1-8 0Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>',
+  phone:'<rect x="7" y="2.5" width="10" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 18.5h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  box:'<path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5Z M3 7.5 12 12l9-4.5M12 12v9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'
+};
+const effLabel=e=>`<span class="eff e${e}">${["","Facile","Moyen","Engageant"][e]}</span>`;
+function refreshLive(){ $("#liveT").textContent=fmt(res.total/1000,1)+" t CO₂e/an"; $("#liveE").textContent=eur(res.spend)+"/mois"; }
+function renderBilan(){
+  const [g,col,txt]=grade(res.total/1000);
+  const gEl=$("#grade"); gEl.textContent=g; gEl.style.background=col;
+  $("#bigT").innerHTML=fmt(res.total/1000,1)+"<small>t CO₂e/an</small>";
+  $("#gradeTxt").textContent=txt+" sur le périmètre mesuré";
+  $("#scale").innerHTML=["A","B","C","D","E"].map((l,i)=>`<span class="${l===g?"on":""}" style="background:var(--g-${l.toLowerCase()})" title="${l}"></span>`).join("");
+  const pot=potential(res), pe=pot.reduce((a,b)=>a+b.eur,0), pk=pot.reduce((a,b)=>a+b.kg,0);
+  $("#kSpend").textContent=eur(res.spend)+"/mois"; $("#kSpendY").textContent=eur(res.spend*12)+" par an";
+  $("#kSave").textContent=eur(pe)+"/mois"; $("#kSaveY").textContent="soit "+eur(pe*12)+" par an";
+  $("#kKg").textContent=kg(pk)+"/an"; $("#kKgP").textContent="−"+fmt(pk/res.total*100)+" % de ton impact";
+  const top=[...res.cats].sort((a,b)=>b.kg-a.kg)[0];
+  $("#kTop").textContent=top.label; $("#kTopP").textContent=fmt(top.kg/res.total*100)+" % de ton impact";
+  const mk=Math.max(...res.cats.map(c=>c.kg)), me=Math.max(...res.cats.map(c=>c.eur));
+  $("#cats").innerHTML=res.cats.map(c=>`<div class="cat"><div class="row"><b>${c.label}</b><span>${kg(c.kg)} · ${eur(c.eur)}/mois</span></div><div class="bar"><i data-w="${c.kg/mk*100}"></i></div><div class="bar eur"><i data-w="${c.eur/me*100}"></i></div></div>`).join("");
+  requestAnimationFrame(()=>$$("#cats .bar i").forEach(i=>i.style.width=i.dataset.w+"%"));
+  const lev=[...res.actions].sort((a,b)=>b.eur-a.eur||b.kg-a.kg);
+  $("#levCount").textContent=lev.length+" gestes";
+  $("#levers").innerHTML=lev.map(a=>`<tr><td>${a.title}${a.grp?' <span style="color:var(--ink-soft);font-size:11.5px">(alternative)</span>':""}</td><td class="r">${a.eur<0.5?"≈ 0":eur(a.eur)}</td><td class="r">${fmt(Math.round(a.kg))}</td><td>${effLabel(a.eff)}</td></tr>`).join("");
+}
+
+/* ================== RENDU : OBJECTIF ================== */
+function renderObj(){
+  const isE=state.mode==="eur", r=$("#tgt");
+  r.min=isE?10:5; r.max=isE?300:60; r.step=isE?5:5; r.value=state.target;
+  r.style.setProperty("--p",((state.target-r.min)/(r.max-r.min)*100)+"%");
+  $$('[data-mode]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===state.mode)));
+  $("#tgtVal").innerHTML=isE?`${state.target} <small>€/mois</small>`:`−${state.target} <small>% d'impact</small>`;
+  const p=planFor(res,state.mode,state.target);
+  const st=$("#tgtStatus");
+  if(p.reached){ st.className="status ok"; st.textContent=`Objectif atteint en ${p.chosen.length} geste${p.chosen.length>1?"s":""}`; }
+  else { st.className="status ko"; st.textContent=isE?`Maximum possible : ${eur(p.got)}/mois`:`Maximum possible : −${fmt(p.got/res.total*100)} %`; }
+  $("#tgtExplain").textContent = isE ? "Le coach choisit d'abord les gestes qui rapportent le plus pour le moindre effort, puis complète jusqu'à l'objectif." : "Le coach choisit d'abord les gestes qui évitent le plus de CO₂e pour le moindre effort, et affiche ce qu'ils te font économiser au passage.";
+  $("#planCount").textContent=p.chosen.length+" geste"+(p.chosen.length>1?"s":"");
+  $("#plan").innerHTML=p.chosen.map((a,i)=>`<div class="plan-item"><span class="ix">${i+1}</span><div><b>${a.title}</b><span>${a.cat} · ${["","Facile","Moyen","Engageant"][a.eff]}</span></div><div class="v"><b>${a.eur<0.5?"≈ 0 €":"+"+eur(a.eur)}</b><br>−${fmt(Math.round(a.kg))} kg</div></div>`).join("") || `<p class="foot-note">Aucun geste nécessaire.</p>`;
+  const se=p.chosen.reduce((a,b)=>a+b.eur,0), sk=p.chosen.reduce((a,b)=>a+b.kg,0);
+  $("#pEur").textContent="+"+eur(se); $("#pEurY").textContent="+"+eur(se*12); $("#pKg").textContent="−"+kg(sk);
+  const after=res.total-sk, afterS=res.spend-se, m=Math.max(res.total,1), ms=Math.max(res.spend,1);
+  $("#ba").innerHTML=`
+    <div class="row"><span>Impact</span><div class="bar"><i style="width:100%;background:var(--sage-deep)"></i></div><span>${fmt(res.total/1000,1)} t</span></div>
+    <div class="row"><span>Après</span><div class="bar"><i style="width:${after/m*100}%"></i></div><span>${fmt(after/1000,1)} t</span></div>
+    <div class="row"><span>Budget</span><div class="bar eur"><i style="width:100%;background:var(--sage-deep)"></i></div><span>${eur(res.spend)}</span></div>
+    <div class="row"><span>Après</span><div class="bar eur"><i style="width:${afterS/ms*100}%"></i></div><span>${eur(afterS)}</span></div>`;
+  state.plan=p;
+  renderWeek();
+}
+
+/* ================== RENDU : DÉFIS ================== */
+function weekChallenges(){
+  const base=(state.plan&&state.plan.chosen.length?state.plan.chosen:potential(res)).slice();
+  for(const a of potential(res)) if(base.length<4&&!base.includes(a)) base.push(a);
+  return base.slice(0,4);
+}
+function renderWeek(){
+  const ch=weekChallenges();
+  $("#week").innerHTML=ch.map(a=>{const on=!!state.done[a.id];return `<div class="chal ${on?"done":""}"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[a.ic]}</svg></span><b>${a.chal}</b><span class="gain">${a.eur>=0.5?"≈ "+eur(a.eur*12/52)+" · ":""}−${fmt(a.kg/52,1)} kg cette semaine</span><button type="button" data-ch="${a.id}" aria-pressed="${on}">${on?"✓ Défi relevé":"Je relève le défi"}</button></div>`}).join("");
+  let e=0,k=0,n=0; ch.forEach(a=>{ if(state.done[a.id]){ e+=a.eur*12/52; k+=a.kg/52; n++; } });
+  $("#wEur").textContent=fmt(e,1).replace(/,0$/,"")+" €"; $("#wKg").textContent=fmt(k,1)+" kg"; $("#wN").textContent=`${n} / ${ch.length}`;
+  $("#days").innerHTML=["L","M","M","J","V","S","D"].map((d,i)=>`<span class="${i<Math.min(7,n*2)?"on":""}">${d}</span>`).join("");
+}
+
+/* ================== COACH ================== */
+function coachScript(){
+  const P=PERSONAS[state.pid];
+  const top=[...res.cats].sort((a,b)=>b.kg-a.kg)[0];
+  const pot=potential(res), pe=pot.reduce((a,b)=>a+b.eur,0);
+  const best=[...res.actions].sort((a,b)=>b.eur-a.eur).filter(a=>a.eur>=0.5);
+  const t3=compatible(best).slice(0,3);
+  const msgs=[];
+  msgs.push(`${P.hello} Sur le périmètre mesuré, ton empreinte est de <b>${fmt(res.total/1000,1)} t de CO₂e par an</b>, et ces habitudes te coûtent environ <b>${eur(res.spend)} par mois</b>. Ton premier poste est <b>${top.label.toLowerCase()}</b>, avec ${fmt(top.kg/res.total*100)} % de ton impact.`);
+  if(t3.length) msgs.push(`Voici tes 3 leviers les plus rentables :<ul>${t3.map(a=>`<li><b>${a.title}</b> : +${eur(a.eur)}/mois et −${fmt(Math.round(a.kg))} kg de CO₂e/an</li>`).join("")}</ul>Ensemble, tout ce que je repère représente jusqu'à <b>${eur(pe)} par mois</b>, soit ${eur(pe*12)} par an.`);
+  const small=res.actions.find(a=>a.id==="shower")||res.actions.find(a=>a.id==="wash");
+  const big=[...res.actions].sort((a,b)=>b.kg-a.kg)[0];
+  if(small&&big&&big.id!==small.id&&big.kg>small.kg*2) msgs.push(`Une idée reçue à corriger : « ${small.title.toLowerCase()} » évite ${fmt(Math.round(small.kg))} kg par an. « ${big.title} » en évite ${fmt(Math.round(big.kg))}. Les deux comptent, mais pas autant : commence par celui qui pèse.`);
+  msgs.push(P.tip);
+  return msgs;
+}
+const QUESTIONS=[
+  {q:"Comment économiser 100 € par mois ?", a:()=>{ const p=planFor(res,"eur",100); if(!p.chosen.length) return "Avec ton profil, il n'y a pas de geste rentable à proposer pour l'instant."; const se=p.chosen.reduce((a,b)=>a+b.eur,0), sk=p.chosen.reduce((a,b)=>a+b.kg,0); return (p.reached?`C'est possible en <b>${p.chosen.length} gestes</b> :`:`Avec ton profil, je plafonne à <b>${eur(se)} par mois</b> :`)+`<ul>${p.chosen.map(a=>`<li>${a.title} (+${eur(a.eur)})</li>`).join("")}</ul>Au total : +${eur(se)} par mois et −${kg(sk)} de CO₂e par an. Tu peux ajuster le montant dans l'onglet Objectif.`; }},
+  {q:"Quelle est l'action la plus simple ?", a:()=>{ const e=[...res.actions].filter(a=>a.eff===1).sort((a,b)=>(b.eur+b.kg/50)-(a.eur+a.kg/50))[0]; return e?`La plus simple pour toi : <b>${e.title.toLowerCase()}</b>. Effort faible, et ça représente ${e.eur>=0.5?"+"+eur(e.eur)+" par mois et ":""}−${fmt(Math.round(e.kg))} kg de CO₂e par an. Commence par celle-là cette semaine.`:"Tes habitudes sont déjà sobres sur les gestes faciles. Les leviers restants demandent un peu plus d'organisation."; }},
+  {q:"Pourquoi la viande pèse autant ?", a:()=>`D'après l'ADEME, un repas avec du bœuf émet environ <b>7,3 kg de CO₂e</b>, contre 1,6 kg avec du poulet et 0,5 kg pour un repas végétarien, soit environ 14 fois moins. L'élevage bovin émet du méthane et demande beaucoup de surface. Avec ${state.v.red} repas de viande rouge par semaine, ton assiette pèse ${kg(res.cats[2].kg)} par an.`},
+  {q:"Ces chiffres sont-ils fiables ?", a:()=>`Ce sont des <b>ordres de grandeur</b>, issus de facteurs publics (ADEME, impactco2.fr) et de prix moyens. Ils servent à comparer les gestes entre eux, pas à faire un bilan certifié. Pour ton empreinte complète, le simulateur Nos Gestes Climat de l'ADEME est la référence. La liste des hypothèses est dans la section Méthode.`}
+];
+function bubbleAI(){ const d=document.createElement("div"); d.className="msg ai"; d.innerHTML=`<div class="who-ai"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true">${ICONS.leaf}</svg>Coach EcoBudget · démo</div><div class="body"><span class="typing"><i></i><i></i><i></i></span></div>`; $("#chat").appendChild(d); scrollChat(); return d.querySelector(".body"); }
+function scrollChat(){ const c=$("#chat"); c.scrollTop=c.scrollHeight; }
+async function typeInto(el,html,run){
+  await sleep(reduced?0:550); if(run!==coachRun) return;
+  if(reduced){ el.innerHTML=html; scrollChat(); return; }
+  // révèle le texte mot par mot en conservant les balises
+  const tokens=html.match(/<[^>]+>|[^<\s]+\s*|\s+/g)||[];
+  // durée fixe par message : le rythme reste le même quelle que soit la machine
+  const words=[]; tokens.forEach((t,i)=>{ if(t[0]!=="<") words.push(i); });
+  const dur=Math.min(2600,Math.max(700,words.length*28)), t0=performance.now();
+  let shown=-1;
+  while(true){
+    const k=Math.min(words.length,Math.floor((performance.now()-t0)/dur*words.length));
+    if(k!==shown){ shown=k; el.innerHTML=tokens.slice(0,(k>=words.length?tokens.length:words[k])).join(""); scrollChat(); }
+    if(k>=words.length) break;
+    await sleep(40); if(run!==coachRun) return;
+  }
+  el.innerHTML=html; scrollChat();
+}
+let qBusy=false;
+async function startCoach(){
+  const run=++coachRun; $("#chat").innerHTML=""; renderQs();
+  for(const m of coachScript()){ const b=bubbleAI(); await typeInto(b,m,run); if(run!==coachRun) return; await sleep(reduced?0:250); }
+}
+function renderQs(){ $("#qs").innerHTML=QUESTIONS.map((x,i)=>`<button class="q" type="button" data-q="${i}">${x.q}<span aria-hidden="true">→</span></button>`).join(""); }
+async function ask(i){
+  if(qBusy) return; qBusy=true; $$(".q").forEach(b=>b.disabled=true);
+  const run=coachRun; const me=document.createElement("div"); me.className="msg me"; me.textContent=QUESTIONS[i].q; $("#chat").appendChild(me); scrollChat();
+  const b=bubbleAI(); await typeInto(b,QUESTIONS[i].a(),run);
+  qBusy=false; $$(".q").forEach(b=>b.disabled=false);
+}
+$("#qs").addEventListener("click",e=>{ const b=e.target.closest("[data-q]"); if(b) ask(Number(b.dataset.q)); });
+
+/* ================== NAVIGATION ================== */
+const TABS=["hab","bil","coach","obj","def"]; let current="hab"; let coachStarted=false;
+function go(id){
+  current=id;
+  TABS.forEach(t=>{ $("#t-"+t).setAttribute("aria-selected",String(t===id)); $("#p-"+t).hidden=t!==id; });
+  if(id==="bil") renderBilan();
+  if(id==="obj") renderObj();
+  if(id==="def") renderWeek();
+  if(id==="coach"&&!coachStarted&&!auto.on){ coachStarted=true; startCoach(); }
+}
+$$(".tab").forEach(t=>t.addEventListener("click",()=>{ stopAuto(); go(t.id.slice(2)); }));
+document.addEventListener("click",e=>{ const g=e.target.closest("[data-go]"); if(g){ stopAuto(); go(g.dataset.go); } });
+$$('[data-mode]').forEach(b=>b.addEventListener("click",()=>{ stopAuto(); state.mode=b.dataset.mode; state.target=state.mode==="eur"?100:20; renderObj(); }));
+$("#tgt").addEventListener("input",e=>{ stopAuto(); state.target=Number(e.target.value); renderObj(); });
+$("#week").addEventListener("click",e=>{ const b=e.target.closest("[data-ch]"); if(!b) return; state.done[b.dataset.ch]=!state.done[b.dataset.ch]; renderWeek(); });
+
+function refresh(){ res=compute(state.v); refreshLive(); if(current==="bil") renderBilan(); if(current==="obj") renderObj(); coachStarted=false; }
+function setPersona(pid,keepTab){
+  state.pid=pid; state.v={...PERSONAS[pid].v}; state.done={}; state.plan=null; coachRun++; coachStarted=false;
+  const P=PERSONAS[pid];
+  $$(".persona").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.persona===pid)));
+  $("#appWho").textContent=P.name; $("#appMeta").textContent=P.meta;
+  const av=$("#appAv"); av.textContent=P.av; av.style.background=P.avBg; av.style.color=pid==="moi"?"#B8EE6A":"#0E1B13";
+  syncForm(); res=compute(state.v); refreshLive();
+  state.plan=planFor(res,state.mode,state.target);
+  if(!keepTab) go("hab"); else go(current);
+  try{ localStorage.setItem("eb-persona",pid); }catch(e){}
+}
+$$(".persona").forEach(b=>b.addEventListener("click",()=>{ stopAuto(); setPersona(b.dataset.persona); }));
+$$('a[data-persona]').forEach(a=>a.addEventListener("click",()=>{ stopAuto(); setPersona(a.dataset.persona); }));
+$$('a[data-autoplay]').forEach(a=>a.addEventListener("click",()=>{ setTimeout(()=>runAuto(a.dataset.autoplay),reduced?0:500); }));
+
+/* ================== DÉMO AUTOMATIQUE (≈ 60 s) ================== */
+const auto={on:false,id:0,t0:0,timer:null};
+const AUTO_LEN=60;
+function stopAuto(){ if(!auto.on) return; auto.on=false; auto.id++; clearInterval(auto.timer); $("#prog").classList.remove("on"); $("#autoBtn span").textContent="Démo auto · 60 s"; }
+async function tween(k,to,ms,id){
+  const f=fieldDef(k), from=Number(state.v[k]); const steps=Math.max(1,Math.round(ms/40));
+  for(let i=1;i<=steps;i++){ if(id!==auto.id) return; let val=from+(to-from)*(i/steps); val=Math.round(val/f.step)*f.step; state.v[k]=val; syncForm(); res=compute(state.v); refreshLive(); await sleep(40); }
+}
+async function runAuto(pid){
+  stopAuto(); auto.on=true; const id=++auto.id; auto.t0=Date.now();
+  $("#prog").classList.add("on"); $("#autoBtn span").textContent="Arrêter";
+  auto.timer=setInterval(()=>{ const s=(Date.now()-auto.t0)/1000; $("#progbar").style.width=Math.min(100,s/AUTO_LEN*100)+"%"; $("#progtxt").textContent=`0:${String(Math.min(59,Math.floor(s))).padStart(2,"0")}`; },250);
+  const target=PERSONAS[pid].v;
+  setPersona(pid); const ok=()=>id===auto.id;
+  $("#app").scrollIntoView({behavior:reduced?"auto":"smooth",block:"start"});
+  // 1. questionnaire : on part d'une base neutre et on "remplit"
+  state.v={...PERSONAS.moi.v, heat:target.heat, carType:target.carType}; syncForm(); res=compute(state.v); refreshLive();
+  await sleep(900); if(!ok()) return;
+  for(const k of ["persons","surface","temp","showers","dur","machines","carKm","tcKm","short","long","red","white","clothes","parcels","devices"]){
+    await tween(k,target[k],420,id); if(!ok()) return; await sleep(90);
+  }
+  state.v={...target}; syncForm(); res=compute(state.v); refreshLive();
+  await sleep(1200); if(!ok()) return;
+  // 2. bilan
+  go("bil"); await sleep(6500); if(!ok()) return;
+  // 3. coach
+  go("coach"); coachStarted=true; await startCoach(); if(!ok()) return;
+  await sleep(1200); if(!ok()) return;
+  await ask(0); if(!ok()) return; await sleep(2200); if(!ok()) return;
+  // 4. objectif
+  state.mode="eur"; state.target=40; go("obj");
+  for(let v=40; v<=100; v+=5){ if(!ok()) return; state.target=v; renderObj(); await sleep(130); }
+  await sleep(4200); if(!ok()) return;
+  // 5. défis
+  go("def"); await sleep(1200);
+  for(const a of weekChallenges().slice(0,2)){ if(!ok()) return; state.done[a.id]=true; renderWeek(); await sleep(1300); }
+  await sleep(2500); stopAuto();
+}
+$("#autoBtn").addEventListener("click",()=>{ if(auto.on) stopAuto(); else runAuto(state.pid==="moi"?"lea":state.pid); });
+
+/* ================== MÉTHODE ================== */
+$("#factors").innerHTML=FACTORS.map(f=>`<tr><td>${f[0]}</td><td>${f[1]}</td><td>${f[2]}</td><td><span class="status-v ${f[3]?"ok":""}">${f[3]?"Source ADEME vérifiée":"À vérifier en V1"}</span></td></tr>`).join("");
+
+/* ================== HERO : chiffres réels de Léa ================== */
+(function(){
+  const r=compute(PERSONAS.lea.v);
+  const cl=r.actions.find(a=>a.id==="cloth"), food=r.actions.filter(a=>a.cat==="Assiette").reduce((s,a)=>s+a.kg,0), p=planFor(r,"eur",100);
+  if(cl) $("#hc1").textContent="−"+eur(cl.eur)+"/mois";
+  $("#hc2").textContent="−"+fmt(Math.round(food))+" kg";
+  $("#hc3").textContent="100 €/mois";
+  $(".chip.c3 .ok").lastChild.textContent=`Atteint en ${p.chosen.length} gestes`;
+  const pk=p.chosen.reduce((a,b)=>a+b.kg,0), pe=p.chosen.reduce((a,b)=>a+b.eur,0);
+  $("#leaQuote").textContent=`« ${p.chosen.length} gestes pour économiser ${eur(pe)} par mois et éviter ${kg(pk)} de CO₂e par an. »`;
+})();
+
+/* ================== WEBGL : texture liquide ================== */
+function liquid(canvas,opts){
+  const gl=canvas.getContext("webgl",{premultipliedAlpha:false,antialias:false});
+  if(!gl) return;
+  const vs="attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
+  const fs=`precision mediump float;uniform float t;uniform vec2 r;uniform float k;
+  float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+  float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+  float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=p*2.02+vec2(1.7,9.2);a*=.5;}return v;}
+  void main(){vec2 uv=gl_FragCoord.xy/r;vec2 p=uv*vec2(r.x/r.y,1.)*k;
+    vec2 q=vec2(fbm(p+t*.04),fbm(p+vec2(5.2,1.3)-t*.035));
+    vec2 w=vec2(fbm(p+4.*q+vec2(1.7,9.2)+t*.02),fbm(p+4.*q+vec2(8.3,2.8)));
+    float f=fbm(p+3.5*w);
+    vec3 deep=vec3(.055,.106,.075),moss=vec3(.18,.35,.23),sage=vec3(.62,.74,.58),lime=vec3(.72,.93,.42);
+    vec3 c=mix(deep,moss,smoothstep(.15,.55,f));
+    c=mix(c,sage,smoothstep(.55,.78,f)*.55);
+    c=mix(c,lime,smoothstep(.7,.95,length(w))*.55);
+    float ridge=pow(max(0.,1.-abs(f-.5)*7.),5.);c+=ridge*vec3(.25,.32,.2);
+    c*=.9+.25*uv.y;
+    gl_FragColor=vec4(c,1.);}`;
+  const sh=(type,src)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;};
+  const pr=gl.createProgram(); gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr,gl.LINK_STATUS)) return;
+  gl.useProgram(pr);
+  const b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(pr,"p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  const ut=gl.getUniformLocation(pr,"t"), ur=gl.getUniformLocation(pr,"r"), uk=gl.getUniformLocation(pr,"k");
+  let visible=true, raf=0;
+  function size(){ const d=Math.min(window.devicePixelRatio||1,1.5)*(opts.scale||1); const w=Math.max(1,Math.round(canvas.clientWidth*d)), h=Math.max(1,Math.round(canvas.clientHeight*d)); if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);} }
+  function frame(ts){ size(); gl.uniform1f(ut,(ts||0)/1000+opts.seed); gl.uniform2f(ur,canvas.width,canvas.height); gl.uniform1f(uk,opts.zoom); gl.drawArrays(gl.TRIANGLE_STRIP,0,4); if(!reduced&&visible) raf=requestAnimationFrame(frame); }
+  new IntersectionObserver(es=>{ visible=es[0].isIntersecting; cancelAnimationFrame(raf); if(visible) raf=requestAnimationFrame(frame); }).observe(canvas);
+  window.addEventListener("resize",()=>{ if(reduced) frame(0); });
+  frame(0);
+}
+liquid($("#gl-hero"),{zoom:2.2,seed:12,scale:1});
+liquid($("#gl-dark"),{zoom:1.6,seed:40,scale:.6});
+
+/* ================== INIT ================== */
+buildForm();
+let start="lea"; try{ const s=localStorage.getItem("eb-persona"); if(s&&PERSONAS[s]) start=s; }catch(e){}
+/* Liens directs pour l'entretien : #lea, #martin, #karim, #moi ouvrent un profil ; #auto lance la démo automatique */
+const h=(location.hash||"").slice(1).toLowerCase();
+if(PERSONAS[h]) start=h;
+setPersona(start);
+if(PERSONAS[h]) setTimeout(()=>$("#demo").scrollIntoView({behavior:"auto",block:"start"}),300);
+if(h==="auto") setTimeout(()=>runAuto("lea"),700);
+window.addEventListener("hashchange",()=>{ const k=(location.hash||"").slice(1).toLowerCase(); if(PERSONAS[k]){ stopAuto(); setPersona(k); $("#demo").scrollIntoView({block:"start"}); } else if(k==="auto") runAuto("lea"); });
+})();
+</script>
+
+</body>
+</html>
